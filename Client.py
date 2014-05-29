@@ -62,29 +62,3 @@ class Client:
         for result in results:
             print('result %r'%(result))
             self.__rpc.onResult(result)
-
-
-if __name__=='__main__':
-    client = Client()
-    client.initSender(False, 'pouloghost123', '942646', \
-                    'smtp.163.com', 'pouloghost123@163.com',\
-                    'pouloghost123@yeah.net')
-    client.initRPC()
-    client.initPoller(False, 'pouloghost123@yeah.net', '942646', \
-                      'imap.yeah.net', port = 143)
-    client.connect()
-    client.sendOnline()
-    client.sendRequest('subtract', [42, 43])
-
-    server = Client()
-    server.initSender(False, 'pouloghost123', '942646', \
-                      'smtp.yeah.net', 'pouloghost123@yeah.net',\
-                      'pouloghost123@163.com')
-    server.initRPC()
-    server.initPoller(False, 'pouloghost123@163.com', '942646', \
-                      'imap.163.com', port = 143)
-    server.registerHandler('subtract', subtract)
-    server.poll()
-    
-else:
-    pass

@@ -82,7 +82,7 @@ class Poller:
         return self.__recv
 
 if __name__ == '__main__':
-    poller = Poller(False, 49856336, 'pouloghost123@yeah.net', '942646', 'imap.yeah.net',\
+    poller = Poller(False, 49856336, 'pouloghost123@yeah.net', '', 'imap.yeah.net',\
                     port = 143)
     poller.connect()
     calls = poller.pollCallIds();

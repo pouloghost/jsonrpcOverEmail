@@ -102,7 +102,7 @@ class Sender:
         return self.__send
 
 if __name__=='__main__':
-    client = Sender(False, 'pouloghost123', '942646', \
+    client = Sender(False, 'pouloghost123', '', \
                     'smtp.163.com', 'pouloghost123@163.com',\
                     'pouloghost123@yeah.net')
     client.connect()
