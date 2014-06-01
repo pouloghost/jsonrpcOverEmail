@@ -9,7 +9,13 @@ if __name__=='__main__':
                       toaddr = 'pouloghost123@163.com')
     server.initRPC()
     server.initPoller(False, 'pouloghost123@yeah.net', '', \
-                      'imap.yeah.net', port = 143, jid = 50330000)
+                      'imap.yeah.net', port = 143, jid = 0000)
     server.registerHandler('subtract', subtract)
     server.connect()
-    server.poll()
+    server.updateId()
+    import timer, time
+    task = timer.Task(server.poll, interval = 30)
+    timer = timer.Timer()
+    timer.add(task)
+    time.sleep(600)
+    timer.cancel()

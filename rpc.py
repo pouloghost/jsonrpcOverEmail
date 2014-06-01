@@ -6,7 +6,6 @@
 class RPC:
     def __init__(self, sender):
         from jsonrpc2 import JsonRpc as Rpc
-        self.__id = sender.getId()
         self.__rpc = Rpc()
         self.__sender = sender
 
@@ -15,7 +14,7 @@ class RPC:
         import smtplib
         fromaddr, toaddr = self.__sender.getAddrs(fromaddr, toaddr)
         if(None != fromaddr):
-            msg = self.__sender.getMsg(fromaddr, toaddr, json, '%d' %(self.__id))
+            msg = self.__sender.getMsg(fromaddr, toaddr, json, '%d' %(self.__sender.getId()))
             self.__sender.sendmail(msg, fromaddr, toaddr)
         else:
             print('error: wrong address')
@@ -41,7 +40,7 @@ class RPC:
         json['jsonrpc'] = '2.0'
         json['method'] = method
         json['params'] = params
-        json['id'] = self.__id
+        json['id'] = self.__sender.getId()
         return '%r'%(json)
 
 def parseJson(json):

@@ -9,5 +9,13 @@ if __name__=='__main__':
                       'imap.163.com', port = 143)
     client.connect()
     client.sendOnline()
-    client.sendRequest('subtract', [42, 43])
-    
+    import time
+    def resultAndNewRequest():
+        client.poll()
+        client.sendRequest('subtract', [time.time(), 0])
+    import timer
+    task = timer.Task(resultAndNewRequest, interval = 30)
+    timer = timer.Timer()
+    timer.add(task)
+    time.sleep(600)
+    timer.cancel()

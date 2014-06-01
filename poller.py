@@ -39,12 +39,22 @@ class Poller:
     def getString(self, byt, key):
         import email
         return email.message_from_string(byt[0][1].decode(encoding = 'utf8'))[key]
+
+    def peekSubject(self, i):
+        stat, byt = self.__client.fetch(i, 'BODY.PEEK[HEADER.FIELDS (SUBJECT)]') #to change
+        return self.getString(byt, 'Subject')
+
+    def pollMsgBody(self, i):
+        stat, byt = self.__client.fetch(i, 'BODY[]')
+        import email
+        body = email.message_from_string(byt[0][1].decode(encoding = 'utf8')).\
+                   get_payload(decode = True).decode()
+        return body
     
-    def pollRPCs(self):
+    def pollWithFilter(self, mfilter):
         if(not self.__recv):
             print('error: not loged in')
             return 
-        from email.header import Header
         #criterion = '(SUBJECT "%d")' %(self.__id)
         criterion = '(NEW)'
         if(None == self.__box):
@@ -52,16 +62,35 @@ class Poller:
         self.__client.select(self.__box)
         stat, ids = self.__client.search(None, criterion)
         cids = []
-        #a header string
-        mfilter = Header('%d' % (self.__id), 'utf8')
-        mfilter = mfilter.encode()
         
         for i in ids[0].split():
-            stat, byt = self.__client.fetch(i, 'BODY[HEADER.FIELDS (SUBJECT)]') #to change
-            sub = self.getString(byt, 'Subject')
-            if(sub == mfilter):
+            if(mfilter(i)):
                 cids.append(i)
         return cids
+    
+    def pollRPCs(self):
+        from email.header import Header
+        msub = Header('%d' % (self.__id), 'utf8')
+        msub = msub.encode()
+        def mfilter(i):
+            return self.peekSubject(i) == msub
+
+        return self.pollWithFilter(mfilter)
+    
+    def updateId(self):
+        from email.header import Header
+        msub = Header('id', 'utf8')
+        msub = msub.encode()
+        def mfilter(i):
+            return self.peekSubject(i) == msub
+        ids = self.pollWithFilter(mfilter)
+        result = None
+        if(len(ids)!=0):
+            i = ids[-1]
+            mid = self.pollMsgBody(i)
+            result = int(mid)
+            self.__id = result
+        return result
     
     def pollAll(self, cids):
         import email
@@ -69,21 +98,19 @@ class Poller:
         calls = []
         results = []
         for i in cids:
-            stat, byt = self.__client.fetch(i, 'BODY[]')
-            json = rpc.parseJson(email.message_from_string(byt[0][1].decode(encoding = 'utf8')).\
-                   get_payload(decode = True).decode())
+            json = rpc.parseJson(self.pollMsgBody(i))
             if('method' in json): #calls
                 calls.append(json)
             else:
+                print('result', json)
                 results.append(json)
         return calls, results
 
     def isConnected(self):
         return self.__recv
-
+        
 if __name__ == '__main__':
     poller = Poller(False, 49856336, 'pouloghost123@yeah.net', '', 'imap.yeah.net',\
                     port = 143)
     poller.connect()
-    calls = poller.pollCallIds();
-    print(poller.pollCalls(calls))
+    print(poller.pollId())

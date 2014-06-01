@@ -13,7 +13,7 @@ class Client:
                  port = None, toaddr = None):
         self.__sender = sender.Sender(ssl, user, password, host, fromaddr,\
                                       port, toaddr)
-        print('sender init')
+        print('sender init', self.__sender.getId())
         
     def initRPC(self):
         self.__rpc = rpc.RPC(self.__sender)
@@ -25,7 +25,7 @@ class Client:
             jid = self.__sender.getId()
         self.__poller = poller.Poller(ssl, jid, user, password, host, \
                  port, mailbox)
-        print('poller init')
+        print('poller init', jid)
 
     def connect(self):
         print('connecting...')
@@ -57,8 +57,11 @@ class Client:
         print(cids)
         calls, results = self.__poller.pollAll(cids)
         for call in calls:
-            print('call %r'%(call))
             self.__rpc.onCall(call)
         for result in results:
-            print('result %r'%(result))
             self.__rpc.onResult(result)
+
+    def updateId(self):
+        mid = self.__poller.updateId()
+        if(None != mid):
+            self.__sender.setId(mid)

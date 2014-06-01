@@ -101,6 +101,9 @@ class Sender:
     def isConnected(self):
         return self.__send
 
+    def setId(self, mid):
+        self.__id = mid
+        
 if __name__=='__main__':
     client = Sender(False, 'pouloghost123', '', \
                     'smtp.163.com', 'pouloghost123@163.com',\
