@@ -57,7 +57,7 @@ class Poller:
         mfilter = mfilter.encode()
         
         for i in ids[0].split():
-            stat, byt = self.__client.fetch(i, 'BODY.PEEK[HEADER.FIELDS (SUBJECT)]') #to change
+            stat, byt = self.__client.fetch(i, 'BODY[HEADER.FIELDS (SUBJECT)]') #to change
             sub = self.getString(byt, 'Subject')
             if(sub == mfilter):
                 cids.append(i)
@@ -69,7 +69,7 @@ class Poller:
         calls = []
         results = []
         for i in cids:
-            stat, byt = self.__client.fetch(i, 'BODY.PEEK[]')
+            stat, byt = self.__client.fetch(i, 'BODY[]')
             json = rpc.parseJson(email.message_from_string(byt[0][1].decode(encoding = 'utf8')).\
                    get_payload(decode = True).decode())
             if('method' in json): #calls
