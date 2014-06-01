@@ -68,12 +68,24 @@ class PriorQueue:
         self._fix_down(i)
         
     def get_extremum(self):
-        return self.__heap[0]
+        extremum = None
+        if(0 != self.size()):
+            extremum = self.__heap[0]
+        return extremum
     
     def pop_extremum(self):
-        m = self.__heap[0]
-        self.delete(0)
+        m = self.get_extremum()
+        if(m != None):
+            self.delete(0)
         return m
+
+    def size(self):
+        return len(self.__heap)
+
+    def clear(self):
+        size = self.size()
+        for i in range(size):
+            del self.__heap[0]
     
     def show(self):
         print(self.__heap)
