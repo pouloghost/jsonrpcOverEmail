@@ -1,7 +1,10 @@
 import Client
 def subtract(minuend, subtrahend):
     return minuend - subtrahend
-
+def cmd():
+    import os
+    os.system('dir')
+    
 if __name__=='__main__':
     server = Client.Client()
     server.initSender(False, 'pouloghost123', '', \
@@ -11,6 +14,7 @@ if __name__=='__main__':
     server.initPoller(False, 'pouloghost123@yeah.net', '', \
                       'imap.yeah.net', port = 143, jid = 0000)
     server.registerHandler('subtract', subtract)
+    server.registerHandler('cmd', cmd)
     server.connect()
     server.updateId()
     import timer, time

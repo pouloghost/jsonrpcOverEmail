@@ -12,7 +12,7 @@ if __name__=='__main__':
     import time
     def resultAndNewRequest():
         client.poll()
-        client.sendRequest('subtract', [time.time(), 0])
+        client.sendRequest('cmd', None)
     import timer
     task = timer.Task(resultAndNewRequest, interval = 30)
     timer = timer.Timer()

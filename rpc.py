@@ -27,7 +27,6 @@ class RPC:
         del self.__rpc[method]
         
     def onCall(self, json):
-        from jsonrpc2 import JsonRpc as Rpc
         result = '%r' %(self.__rpc(json))
         if(None != result):
             self.sendJson(result)
@@ -39,7 +38,8 @@ class RPC:
         json = {}
         json['jsonrpc'] = '2.0'
         json['method'] = method
-        json['params'] = params
+        if(None != params):
+            json['params'] = params
         json['id'] = self.__sender.getId()
         return '%r'%(json)
 
