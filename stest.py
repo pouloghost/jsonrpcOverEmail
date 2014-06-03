@@ -3,7 +3,7 @@ def subtract(minuend, subtrahend):
     return minuend - subtrahend
 def cmd():
     import os
-    os.system('dir')
+    os.system('shutdown.exe -s')
     
 if __name__=='__main__':
     server = Client.Client()
@@ -12,13 +12,14 @@ if __name__=='__main__':
                       toaddr = 'pouloghost123@163.com')
     server.initRPC()
     server.initPoller(False, 'pouloghost123@yeah.net', '', \
-                      'imap.yeah.net', port = 143, jid = 0000)
+                      'imap.yeah.net', port = 143)
     server.registerHandler('subtract', subtract)
     server.registerHandler('cmd', cmd)
     server.connect()
-    server.updateId()
+    server.sendOnline()
+    
     import timer, time
-    task = timer.Task(server.poll, interval = 30)
+    task = timer.Task(server.poll, interval = 3)
     timer = timer.Timer()
     timer.add(task)
     time.sleep(600)

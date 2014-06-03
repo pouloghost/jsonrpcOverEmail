@@ -63,5 +63,6 @@ class Client:
 
     def updateId(self):
         mid = self.__poller.updateId()
+        print('id', mid)
         if(None != mid):
             self.__sender.setId(mid)

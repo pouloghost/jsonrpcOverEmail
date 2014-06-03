@@ -8,7 +8,8 @@ if __name__=='__main__':
     client.initPoller(False, 'pouloghost123@163.com', '', \
                       'imap.163.com', port = 143)
     client.connect()
-    client.sendOnline()
+    client.updateId()
+    
     import time
     def resultAndNewRequest():
         client.poll()
