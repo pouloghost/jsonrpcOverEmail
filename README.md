@@ -7,6 +7,6 @@ to use as a small toy for fun.
 
 the structure is as follows:
 
-*client sends a private id to the server email inbox
-*server initalizes poller rpc sender based on the id
+*server sends a private id to the client's email inbox
+*client initalizes poller rpc sender based on the id
 *the two can interact with each other by sending emails consists of jsonrpc objs
